@@ -298,19 +298,19 @@ React Native Notes
 	import axios from 'axios';
 	
 	class AlbumList extends Component {
-			componentWillMount () {
-				axios.get('https://rallycoding.herokuapp.com/api/music_albums')
-				.then(response => console.log(response));
-			}	
+		componentWillMount () {
+			axios.get('https://rallycoding.herokuapp.com/api/music_albums')
+			.then(response => console.log(response));
+		}	
 
-			render() {
-				return (
-					<View>
-						<Text>Album List!!!</Text>
-					</View>
-				);
-			}
+		render() {
+			return (
+				<View>
+					<Text>Album List!!!</Text>
+				</View>
+			);
 		}
+	}
 
 17) Component Level State
 
@@ -351,3 +351,150 @@ React Native Notes
 
 		1. Whenever we want to communicate from Parent component to child component, use 'props'.
 		2. 'State' is for a component's internal record keeping. Whenever we want to update data.
+
+18) Rendering a List of Components
+
+	* We can use 'state' only for a class based component
+	* map() - array helper
+
+	class AlbumList extends Component {
+		
+		//set default or initial state
+		state = { albums: [] };
+		
+		componentWillMount () {
+			axios.get('https://rallycoding.herokuapp.com/api/music_albums')
+			.then(response => this.setState({ albums: response.data }));
+		}
+
+		renderAlbums() {
+			return (this.state.albums.map(album => <Text>{album.title}</Text>));
+		}	
+
+		render() {
+			console.log(this.state);
+			return (
+				<View>
+					{this.renderAlbums()}
+				</View>
+			);
+		}
+	}
+
+19) Displaying Individual Albums
+
+	renderAlbums() {
+		return (
+			this.state.albums.map(album => 
+				<Text key={album.title}>{album.title}</Text>
+			)
+		);
+	}
+
+	* Next create an Album Detail Component - AlbumDetail.js
+	* Album Detail component is only for presenting the data, so this can be a functional component
+	* import AlbumDetail in AlbumList.js - import AlbumDetail from './AlbumDetail';
+
+	import react from 'react';
+	import { View, Text } from 'react-native';
+
+
+	const AlbumDetail = (props) => {
+		return (
+			<View>
+				<Text>{props.data.title}</Text>
+			</View>
+		)
+	};
+
+	export default AlbumDetail;
+
+
+
+	//AlbumList.js
+	renderAlbums() {
+		return (this.state.albums.map(album => <AlbumDetail key={album.title} data={album} />));
+	}
+
+20) Fantastic Reusable Components - The Card
+
+	Refer the screenshot
+
+		1. Create Card and CardSection components - Card.js & 
+
+
+		//Card.js
+
+		import React from 'react';
+		import { View } from 'react-native';
+
+		const Card = () => {
+			return (
+				<View style={styles.containerStyle}></View>
+			);
+		};
+
+		const styles = {
+			containerStyle : {
+				borderWidth : 1,
+				borderRadius : 2,
+				borderColor :  '#ddd',
+				borderBorderWidth : 0,
+				shadowColor : "#000",
+				shadowOffset : { width : 0, height : 2 },
+				shadowOpacity : 0.1,
+				shadowRadius : 2,
+				elevation : 2,
+				marginLeft : 5,
+				marginRight :5,
+				marginTop : 10
+			}
+		}
+
+		export default Card;
+
+21) Passing Components as Props
+
+	* Anytime we pass a component that we have created in another component, that component will show up on the props object as 'props.children'
+
+
+22) Dividing Cards into Sections
+
+	* Create a new component - CardSection.js
+	* Just like the Card component, even this is going to be just a presentational component. So it can be a functional component.
+
+
+23) Mastering Layout with Flexbox
+
+	* Flexbox is used to layout multiple items in a container
+
+	justifyContent : 'space-between' - Maximise and equalise the amount of space between each item. Only for multiple items
+
+	justifyContent : 'space-around' - Adds space around the first and last item
+
+24) Positioning of Elements on Mobile
+
+25) Images with React Native
+	 
+	* React Native provides built in support for rendering images
+	* React Native library has image primitive just like Text and View Primitive
+	* Whenever we start to get more than one reference to a prop, it is always a good convention to de-structure that property out of our arguement of props
+	* By default, the image will not expand to fill the space available to it in React Native. Instead we have to manually add in a row that tells the image tag, exactly how big the image should be.
+	* As we are using 'styles' object more than once, we can de-structure styles object too.
+
+
+26) Displaying Album Artwork
+	
+27) Making Content scrollable
+	
+	* By default there won't be any scrolling
+	* We must always make it scrollable
+
+	* We need to import a component called ScrollView and replace our existing view with that ScrollView tag
+	* Whenever we have a ScrollView, we must have a style property flex : 1 to our root View in index.android.js
+
+
+28) Handling User Input with Buttons
+	
+	* First let's make a reusable button component.
+	
